@@ -21,13 +21,18 @@ import com.mscode.microservice.vaccinationcenter.repositories.VaacinationCenterR
 public class VaccinationCenterController {
 	@Autowired
 	private VaacinationCenterRepository vaacinationCenterRepository;
-	
+
 	@Autowired
 	private RestTemplate restemp;
-	
+
+	@RequestMapping(path = "/testvaccineapp")
+	public String appTest() {
+		return "Result from vaccine center";
+	}
+
 	@RequestMapping(path = "/addcenter")
 	public ResponseEntity<VaccnationCenter> saveVaccinationCenter(@RequestBody VaccnationCenter vc) {
-		if (null==vc) {
+		if (null == vc) {
 			System.out.println(" Bad requesu");
 			return new ResponseEntity<VaccnationCenter>(vc, HttpStatus.BAD_REQUEST);
 		} else {
@@ -36,19 +41,18 @@ public class VaccinationCenterController {
 			return new ResponseEntity<VaccnationCenter>(svc, HttpStatus.OK);
 		}
 	}
-	
+
 	@RequestMapping("/id/{id}")
-	public ResponseEntity<RequiredResponse> getCenterData(@PathVariable Integer id){
+	public ResponseEntity<RequiredResponse> getCenterData(@PathVariable Integer id) {
 		RequiredResponse rr = new RequiredResponse();
 		VaccnationCenter vc = vaacinationCenterRepository.findById(id).get();
 		rr.setCenter(vc);
-		System.out.println("http://CITIZEN-SERVICE/citizen/id/"+id);
-		List<Citizen> lc= restemp.getForObject("http://CITIZEN-SERVICE/citizen/id/"+id, List.class);
+		System.out.println("http://CITIZEN-SERVICE/citizen/id/" + id);
+		List<Citizen> lc = restemp.getForObject("http://CITIZEN-SERVICE/citizen/id/" + id, List.class);
 		rr.setCitizens(lc);
-		
-		
-		return new ResponseEntity<RequiredResponse>(rr,HttpStatus.OK);
-		
+
+		return new ResponseEntity<RequiredResponse>(rr, HttpStatus.OK);
+
 	}
 
 }
